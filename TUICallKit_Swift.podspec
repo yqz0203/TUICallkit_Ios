@@ -16,6 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.dependency 'TUICore'
   spec.dependency 'RTCCommon'
+  spec.dependency 'TUIVoIPExtension/LiveCommunicationKit'
 
   spec.requires_arc = true
   spec.static_framework = true
