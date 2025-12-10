@@ -169,12 +169,22 @@ public class TUICallKit: NSObject {
     }
     
     /**
-         * Set the display direction of the CallKit interface. The default value is portrait
-         * @param orientation 0-Portrait, 1-LandScape, 2-Auto;   default value: 0
-         * Note: You are advised to use portrait mode to avoid abnormal display for small screen devices such as mobile phone
-         */
+     * Set the display direction of the CallKit interface. The default value is portrait
+     * @param orientation 0-Portrait, 1-LandScape, 2-Auto;   default value: 0
+     * Note: You are advised to use portrait mode to avoid abnormal display for small screen devices such as mobile phone
+     */
     @objc
     public func setScreenOrientation(orientation: Int, succ:@escaping TUICallSucc, fail: @escaping TUICallFail) {
         return TUICallKitImpl.shared.setScreenOrientation(orientation: orientation, succ: succ, fail: fail)
+    }
+    
+    /**
+     * Set the background color for waiting/no video stream state
+     * @param hexString Hex color string, e.g., "#00FF00" or "00FF00"
+     * Default is green (#00FF00)
+     */
+    @objc
+    public func setWaitingBackgroundColor(hexString: String) {
+        return TUICallKitImpl.shared.setWaitingBackgroundColor(hexString: hexString)
     }
 }

@@ -40,6 +40,10 @@ class TUICallKitImpl: TUICallKit {
         CallManager.shared.setScreenOrientation(orientation: targetOrientation, succ: succ, fail: fail)
     }
     
+    override func setWaitingBackgroundColor(hexString: String) {
+        CallManager.shared.globalState.setWaitingBackgroundColor(hexString: hexString)
+    }
+    
     override func setSelfInfo(nickname: String, avatar: String, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
         CallManager.shared.setSelfInfo(nickname: nickname, avatar: avatar) {
             succ()

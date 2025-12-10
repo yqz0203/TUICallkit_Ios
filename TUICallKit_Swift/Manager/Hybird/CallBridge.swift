@@ -197,6 +197,18 @@ public class CallBridge {
         }
     }
     
+    public func setBackgroundColor(color: String?) {
+        Logger.info("CallBridge->setBackgroundColor. color:\(color ?? "nil")")
+        DispatchQueue.main.async {
+            if let hexString = color, !hexString.isEmpty {
+                CallManager.shared.globalState.setWaitingBackgroundColor(hexString: hexString)
+            } else {
+                // 如果传入 nil 或空字符串，使用默认绿色
+                CallManager.shared.globalState.setWaitingBackgroundColor(hexString: "#00FF00")
+            }
+        }
+    }
+    
     public func startFloatWindow() {
         Logger.info("CallBridge->startFloatWindow")
         DispatchQueue.main.async {

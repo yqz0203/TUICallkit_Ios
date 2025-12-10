@@ -249,8 +249,8 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
                 selfVideoView.setBackgroundColor(UIColor.clear)
                 selfVideoView.isHidden = false
             } else {
-                // 自己没有视频流，显示绿色背景
-                selfVideoView.setBackgroundColor(UIColor.green)
+                // 自己没有视频流，显示配置的背景颜色
+                selfVideoView.setBackgroundColor(CallManager.shared.globalState.waitingBackgroundColor)
                 selfVideoView.isHidden = false
             }
             
@@ -262,8 +262,8 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
                     CallManager.shared.startRemoteView(user: remoteUser, videoView: remoteVideoView.getVideoView())
                 }
             } else {
-                // 对方没有视频流，显示绿色背景
-                remoteVideoView.setBackgroundColor(UIColor.green)
+                // 对方没有视频流，显示配置的背景颜色
+                remoteVideoView.setBackgroundColor(CallManager.shared.globalState.waitingBackgroundColor)
                 remoteVideoView.isHidden = false
             }
             
@@ -276,10 +276,11 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
             remoteVideoView.setNeedsLayout()
             setNeedsLayout()
         } else {
-            // 其他状态都显示绿色背景
-            backgroundColor = UIColor.green
-            selfVideoView.setBackgroundColor(UIColor.green)
-            remoteVideoView.setBackgroundColor(UIColor.green)
+            // 其他状态都显示配置的背景颜色
+            let waitingColor = CallManager.shared.globalState.waitingBackgroundColor
+            backgroundColor = waitingColor
+            selfVideoView.setBackgroundColor(waitingColor)
+            remoteVideoView.setBackgroundColor(waitingColor)
             
             // 隐藏背景头像
             selfVideoView.setBackgroundAvatarHidden(true)
