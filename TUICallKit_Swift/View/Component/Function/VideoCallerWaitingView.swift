@@ -32,6 +32,7 @@ class VideoCallerWaitingView: UIView {
             guard let self = self else { return }
             self.virtualBackgroundTouchEvent(sender: sender)
         }
+        btn.isHidden=true
         return btn
     }()
     

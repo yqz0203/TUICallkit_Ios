@@ -14,6 +14,8 @@ private let kCallKitSingleSmallVideoViewWidth = 100.0
 class SingleCallVideoLayout: UIView, GestureViewDelegate {
     private let callStatusObserver = Observer()
     private let isVirtualBackgroundOpenedObserver = Observer()
+    private let isCameraOpenedObserver = Observer()
+    private let videoAvailableObserver = Observer()
 
     private var isViewReady: Bool = false
     private var selfUserIsLarge = true
@@ -183,6 +185,16 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
             }
         }
         
+        CallManager.shared.mediaState.isCameraOpened.addObserver(isCameraOpenedObserver) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.updateView()
+        }
+        
+        CallManager.shared.userState.selfUser.videoAvailable.addObserver(videoAvailableObserver) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.updateView()
+        }
+        
         NotificationCenter.default.addObserver(self,
                                              selector: #selector(orientationChanged),
                                              name: UIDevice.orientationDidChangeNotification,
@@ -192,6 +204,8 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     private func unregisterobserver() {
         CallManager.shared.userState.selfUser.callStatus.removeObserver(callStatusObserver)
         CallManager.shared.viewState.isVirtualBackgroundOpened.removeObserver(isVirtualBackgroundOpenedObserver)
+        CallManager.shared.mediaState.isCameraOpened.removeObserver(isCameraOpenedObserver)
+        CallManager.shared.userState.selfUser.videoAvailable.removeObserver(videoAvailableObserver)
         NotificationCenter.default.removeObserver(self,
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
@@ -211,19 +225,79 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
             fail: { code, message in }
         }
 
-        if CallManager.shared.userState.selfUser.callStatus.value == .waiting {
-            remoteVideoView.isHidden = true
-            selfVideoView.isHidden = false
+        // 判断是否应该显示视频：接听状态、摄像头打开、有视频流
+        let isAccepted = CallManager.shared.userState.selfUser.callStatus.value == .accept
+        let isCameraOpened = CallManager.shared.mediaState.isCameraOpened.value == true
+        let selfHasVideo = CallManager.shared.userState.selfUser.videoAvailable.value == true
+        
+        // 检查对方是否有视频流
+        var remoteHasVideo = false
+        if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
+            remoteHasVideo = remoteUser.videoAvailable.value == true && remoteUser.callStatus.value == .accept
         }
         
-        if CallManager.shared.userState.selfUser.callStatus.value == .accept {
-            remoteVideoView.isHidden = false
-            selfVideoView.isHidden = false
-
-            if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
-                CallManager.shared.startRemoteView(user: remoteUser, videoView: remoteVideoView.getVideoView())
+        // 只有在接听、摄像头打开、有视频流时才显示视频，其他情况显示绿色背景
+        let shouldShowVideo = isAccepted && isCameraOpened && (selfHasVideo || remoteHasVideo)
+        
+        if shouldShowVideo {
+            // 有视频流时，容器背景设置为clear，让视频显示
+            backgroundColor = UIColor.clear
+            
+            // 根据视频流情况设置背景：有视频流显示视频（clear），没有视频流显示绿色背景
+            if selfHasVideo {
+                // 自己有视频流，背景设置为clear，显示视频
+                selfVideoView.setBackgroundColor(UIColor.clear)
+                selfVideoView.isHidden = false
+            } else {
+                // 自己没有视频流，显示绿色背景
+                selfVideoView.setBackgroundColor(UIColor.green)
+                selfVideoView.isHidden = false
+            }
+            
+            if remoteHasVideo {
+                // 对方有视频流，背景设置为clear，显示视频
+                remoteVideoView.setBackgroundColor(UIColor.clear)
+                remoteVideoView.isHidden = false
+                if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
+                    CallManager.shared.startRemoteView(user: remoteUser, videoView: remoteVideoView.getVideoView())
+                }
+            } else {
+                // 对方没有视频流，显示绿色背景
+                remoteVideoView.setBackgroundColor(UIColor.green)
+                remoteVideoView.isHidden = false
+            }
+            
+            // 隐藏背景头像（确保隐藏）
+            selfVideoView.setBackgroundAvatarHidden(true)
+            remoteVideoView.setBackgroundAvatarHidden(true)
+            
+            // 强制刷新视图
+            selfVideoView.setNeedsLayout()
+            remoteVideoView.setNeedsLayout()
+            setNeedsLayout()
+        } else {
+            // 其他状态都显示绿色背景
+            backgroundColor = UIColor.green
+            selfVideoView.setBackgroundColor(UIColor.green)
+            remoteVideoView.setBackgroundColor(UIColor.green)
+            
+            // 隐藏背景头像
+            selfVideoView.setBackgroundAvatarHidden(true)
+            remoteVideoView.setBackgroundAvatarHidden(true)
+            
+            if CallManager.shared.userState.selfUser.callStatus.value == .waiting {
+                remoteVideoView.isHidden = true
+                selfVideoView.isHidden = false
+            } else {
+                // 非等待状态但也不显示视频时（如关闭摄像头），隐藏视频视图
+                remoteVideoView.isHidden = true
+                selfVideoView.isHidden = true
             }
         }
+        
+        // 始终隐藏模糊效果
+        selfVideoView.setBlurBackground(hidden: true)
+        remoteVideoView.setBlurBackground(hidden: true)
     }
     
     private func switchPreview() {
@@ -237,6 +311,17 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     
     private func updateUserInfo() {
         if CallManager.shared.userState.selfUser.callStatus.value == .accept &&
+           CallManager.shared.callState.mediaType.value == .video {
+            userHeadImageView.isHidden = true
+            userNameLabel.isHidden = true
+        }
+        
+        // 在等待状态或关闭摄像头状态时隐藏对方头像和名字
+        let isWaiting = CallManager.shared.userState.selfUser.callStatus.value == .waiting
+        let isCameraClosed = CallManager.shared.mediaState.isCameraOpened.value == false || 
+                            CallManager.shared.userState.selfUser.videoAvailable.value == false
+        
+        if (isWaiting || isCameraClosed) &&
            CallManager.shared.callState.mediaType.value == .video {
             userHeadImageView.isHidden = true
             userNameLabel.isHidden = true

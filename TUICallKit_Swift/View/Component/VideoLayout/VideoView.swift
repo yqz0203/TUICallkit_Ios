@@ -138,6 +138,21 @@ class VideoView: UIView, GestureViewDelegate {
         self.isShowFloatWindow = isShowFloatWindow
         updateView()
     }
+    
+    func setBlurBackground(hidden: Bool) {
+        backgroundFilterView.isHidden = hidden
+    }
+    
+    func setBackgroundColor(_ color: UIColor?) {
+        backgroundColor = color
+        videoView.backgroundColor = color
+        // 始终隐藏背景头像，让背景颜色或视频显示
+        backgroundAvatarView.isHidden = true
+    }
+    
+    func setBackgroundAvatarHidden(_ hidden: Bool) {
+        backgroundAvatarView.isHidden = hidden
+    }
         
     // MARK: UI Specification Processing
     override func didMoveToWindow() {
@@ -152,6 +167,8 @@ class VideoView: UIView, GestureViewDelegate {
     private func constructViewHierarchy() {
         addSubview(backgroundAvatarView)
         addSubview(backgroundFilterView)
+        // 始终隐藏模糊效果
+        backgroundFilterView.isHidden = true
         addSubview(videoView)
         addSubview(nicknameView)
         addSubview(avatarView)
@@ -393,6 +410,10 @@ class VideoView: UIView, GestureViewDelegate {
         updateSwtchCameraBtn()
         updateVirtualBackgroundBtn()
         updateGestureView()
+        // 始终隐藏模糊效果
+        backgroundFilterView.isHidden = true
+        // 始终隐藏背景头像
+        backgroundAvatarView.isHidden = true
     }
         
     private func updateVideoView() {

@@ -15,7 +15,7 @@ import TUICallKit_Swift
 import TUICallKit
 #endif
 
-public let TUI_CALL_DEFAULT_AVATAR: String = "https://assets3.pgyer.com/image/view/admin_banner/9166c39fa132df9c04f22c0464cba1a4?t=123"
+public let TUI_CALL_DEFAULT_AVATAR: String = "https://pica.zhimg.com/70/v2-7e7684ea1b66cdc6841cb74f34bd3cdf_1440w.avis?source=172ae18b&biz_tag=Post"
 public let PURCHASE_URL = "https://cloud.tencent.com/document/product/1640/79968"
 public let ACCESS_URL = "https://cloud.tencent.com/document/product/1640/81131"
 public let API_URL = "https://cloud.tencent.com/document/product/1640/79996"
