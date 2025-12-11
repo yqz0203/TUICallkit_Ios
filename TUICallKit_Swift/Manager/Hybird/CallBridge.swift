@@ -190,6 +190,13 @@ public class CallBridge {
         }
     }
     
+    public func enableIncomingBanner(enable: Bool) {
+        Logger.info("CallBridge->enableIncomingBanner. enable:\(enable)")
+        DispatchQueue.main.async {
+            TUICallKit.createInstance().enableIncomingBanner(enable: enable)
+        }
+    }
+    
     public func setBlurBackground(level: Int) {
         Logger.info("CallBridge->setBlurBackground. level:\(level)")
         DispatchQueue.main.async {
@@ -197,11 +204,11 @@ public class CallBridge {
         }
     }
     
-    public func setBackgroundColor(color: String?) {
-        Logger.info("CallBridge->setBackgroundColor. color:\(color ?? "nil")")
+    public func setBackgroundColor(color: String) {
+        Logger.info("CallBridge->setBackgroundColor. color:\(color)")
         DispatchQueue.main.async {
-            if let hexString = color, !hexString.isEmpty {
-                CallManager.shared.globalState.setWaitingBackgroundColor(hexString: hexString)
+            if !color.isEmpty {
+                CallManager.shared.globalState.setWaitingBackgroundColor(hexString: color)
             } else {
                 // 如果传入 nil 或空字符串，使用默认绿色
                 CallManager.shared.globalState.setWaitingBackgroundColor(hexString: "#00FF00")
