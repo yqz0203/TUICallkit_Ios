@@ -90,6 +90,7 @@
 		4F5280B52C74823500B33AE5 /* SettingsCustomSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCustomSwitchView.swift; sourceTree = "<group>"; };
 		4F9E8F6E2AD9413C00DB82C4 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/TUICallKitAppLocalized.strings; sourceTree = "<group>"; };
 		4FE7A784275E3A89009CCB09 /* phone_ringing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = phone_ringing.mp3; sourceTree = "<group>"; };
+		5CE4C0DE2EED59DC0071584D /* TUICallKitApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUICallKitApp.entitlements; sourceTree = "<group>"; };
 		704D44628D9621C9B6C42E48 /* Pods_TUICallKitApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TUICallKitApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91F2AB471EFA1B512F559859 /* Pods-TUICallKitApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICallKitApp.debug.xcconfig"; path = "Target Support Files/Pods-TUICallKitApp/Pods-TUICallKitApp.debug.xcconfig"; sourceTree = "<group>"; };
 		978AEE3D0185AD9D68A3E8A7 /* Pods-TUICallKitApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICallKitApp.release.xcconfig"; path = "Target Support Files/Pods-TUICallKitApp/Pods-TUICallKitApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 		474E0FDC2644DFAE002AFADB = {
 			isa = PBXGroup;
 			children = (
+				5CE4C0DE2EED59DC0071584D /* TUICallKitApp.entitlements */,
 				4F3F7CB326D65DE3002912DE /* Debug */,
 				47D9D35C26521A7A0007EE1F /* App */,
 				B8CE19852D81351500EEBA51 /* APNsExtension */,
@@ -689,7 +691,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = TUICallKitApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 860;
@@ -878,6 +880,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = APNsExtension/APNsExtensionDebug.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
