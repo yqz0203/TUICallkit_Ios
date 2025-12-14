@@ -62,7 +62,7 @@ class MultiCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
-    private func updateCollectionViewLayout() {
+    func updateCollectionViewLayout() {
         videoCollectionView.collectionViewLayout.invalidateLayout()
         videoCollectionView.setNeedsLayout()
         videoCollectionView.layoutIfNeeded()

@@ -16,6 +16,8 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     private let isVirtualBackgroundOpenedObserver = Observer()
     private let isCameraOpenedObserver = Observer()
     private let videoAvailableObserver = Observer()
+    private let remoteVideoAvailableObserver = Observer()
+    private let remoteCallStatusObserver = Observer()
 
     private var isViewReady: Bool = false
     private var selfUserIsLarge = true
@@ -79,7 +81,19 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        if isViewReady { return }
+        if isViewReady {
+            // 如果视图已经初始化，但窗口切换了（比如从横幅切换到主窗口），需要更新视图
+            if window != nil {
+                // 延迟更新，确保窗口已经完全切换
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.updateView()
+                    self.setNeedsLayout()
+                    self.layoutIfNeeded()
+                }
+            }
+            return
+        }
         isViewReady = true
         constructViewHierarchy()
         activateConstraints()
@@ -88,12 +102,23 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        // 确保在布局更新时视频视图保持可见
+        if CallManager.shared.callState.mediaType.value == .video {
+            selfVideoView.alpha = 1.0
+            remoteVideoView.alpha = 1.0
+        }
         updateVideoFrames()
     }
     
     @objc private func orientationChanged() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            // 确保视频视图在布局更新前保持可见，避免黑屏
+            self.selfVideoView.alpha = 1.0
+            self.remoteVideoView.alpha = 1.0
+            // 立即更新布局，避免延迟导致的黑屏
             self.setNeedsLayout()
+            self.layoutIfNeeded()
         }
     }
         
@@ -140,6 +165,9 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     private func updateVideoFrames() {
         guard CallManager.shared.callState.mediaType.value == .video else { return }
         
+        // 确保 bounds 有效，避免无效的 frame 导致黑屏
+        guard bounds.width > 0 && bounds.height > 0 else { return }
+        
         let isLandscape = !WindowUtils.isPortrait
         let smallWidth = kCallKitSingleSmallVideoViewWidth
         let smallHeight = smallWidth / 9.0 * 16.0
@@ -156,9 +184,21 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
         
         let largeFrame = bounds
         
-        selfVideoView.frame = selfUserIsLarge ? largeFrame : smallFrame
-        remoteVideoView.frame = selfUserIsLarge ? smallFrame : largeFrame
-        bringSubviewToFront(selfUserIsLarge ? remoteVideoView : selfVideoView)
+        // 确保 frame 有效
+        let selfFrame = selfUserIsLarge ? largeFrame : smallFrame
+        let remoteFrame = selfUserIsLarge ? smallFrame : largeFrame
+        
+        // 使用动画更新 frame，避免突然变化导致黑屏
+        if selfVideoView.frame != selfFrame || remoteVideoView.frame != remoteFrame {
+            UIView.performWithoutAnimation {
+                selfVideoView.frame = selfFrame
+                remoteVideoView.frame = remoteFrame
+                // 确保视频视图可见
+                selfVideoView.alpha = 1.0
+                remoteVideoView.alpha = 1.0
+            }
+            bringSubviewToFront(selfUserIsLarge ? remoteVideoView : selfVideoView)
+        }
     }
     
     
@@ -195,6 +235,19 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
             self.updateView()
         }
         
+        // 监听远程用户的视频状态变化，确保窗口切换后能正确显示视频
+        if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
+            remoteUser.videoAvailable.addObserver(remoteVideoAvailableObserver) { [weak self] _, _ in
+                guard let self = self else { return }
+                self.updateView()
+            }
+            
+            remoteUser.callStatus.addObserver(remoteCallStatusObserver) { [weak self] _, _ in
+                guard let self = self else { return }
+                self.updateView()
+            }
+        }
+        
         NotificationCenter.default.addObserver(self,
                                              selector: #selector(orientationChanged),
                                              name: UIDevice.orientationDidChangeNotification,
@@ -206,6 +259,13 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
         CallManager.shared.viewState.isVirtualBackgroundOpened.removeObserver(isVirtualBackgroundOpenedObserver)
         CallManager.shared.mediaState.isCameraOpened.removeObserver(isCameraOpenedObserver)
         CallManager.shared.userState.selfUser.videoAvailable.removeObserver(videoAvailableObserver)
+        
+        // 移除远程用户的观察者
+        if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
+            remoteUser.videoAvailable.removeObserver(remoteVideoAvailableObserver)
+            remoteUser.callStatus.removeObserver(remoteCallStatusObserver)
+        }
+        
         NotificationCenter.default.removeObserver(self,
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)

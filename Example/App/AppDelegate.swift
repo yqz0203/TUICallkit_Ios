@@ -28,7 +28,7 @@ import TXLiteAVSDK_Professional
 /// You need to register a developer certificate with Apple, download and generate the certificate (P12 file) in their developer accounts, and upload the generated P12 file to the Tencent certificate console.
 /// The console will automatically generate a certificate ID and pass it to the `businessID` parameter.
 #if DEBUG
-let business_id: Int32 = 47290
+let business_id: Int32 = 47334
 #else
 let business_id: Int32 = 47212
 #endif
