@@ -239,7 +239,7 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
         let pushInfo: TUIOfflinePushInfo = TUIOfflinePushInfo()
         pushInfo.title = ""
         pushInfo.desc = "您有一个新的通话"
-        pushInfo.iOSPushType = .voIP
+        pushInfo.iOSPushType = .apns
         pushInfo.ignoreIOSBadge = false
         pushInfo.iOSSound = "phone_ringing.mp3"
         pushInfo.androidSound = "phone_ringing"
