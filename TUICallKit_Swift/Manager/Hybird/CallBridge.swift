@@ -225,6 +225,17 @@ public class CallBridge {
         }
     }
     
+    public func setCertificate(str: String) {
+        Logger.info("CallBridge->setCertificateID. id:\(str)")
+        DispatchQueue.main.async {
+            if #available(iOS 17.4, *) {
+                TUIVoIPExtensionManager.setCertificateID(Int(str) ?? 0)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+    
     public func startFloatWindow() {
         Logger.info("CallBridge->startFloatWindow")
         DispatchQueue.main.async {
@@ -267,16 +278,7 @@ public class CallBridge {
         incomingBannerCallback = callback
     }
     
-    public func setCertificateID(id: Int) {
-        Logger.info("CallBridge->setCertificateID. id:\(id)")
-        DispatchQueue.main.async {
-            if #available(iOS 17.4, *) {
-                TUIVoIPExtensionManager.setCertificateID(id)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-    }
+
     
     // MARK: Private
     @objc private func handleTapFloatWindow() {
