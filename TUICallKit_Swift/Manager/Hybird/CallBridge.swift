@@ -8,7 +8,7 @@
 import RTCRoomEngine
 import TUICore
 import RTCCommon
-import TUIVoIPExtension
+//import TUIVoIPExtension
 
 public class CallBridge {
         
@@ -266,13 +266,13 @@ public class CallBridge {
     
     public func setCertificateID(id: Int) {
         Logger.info("CallBridge->setCertificateID. id:\(id)")
-        DispatchQueue.main.async {
-            if #available(iOS 17.4, *) {
-                TUIVoIPExtension.setCertificateID(id)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
+//        DispatchQueue.main.async {
+//            if #available(iOS 17.4, *) {
+//                TUIVoIPExtension.setCertificateID(id)
+//            } else {
+//                // Fallback on earlier versions
+//            }
+//        }
     }
     
     // MARK: Private
