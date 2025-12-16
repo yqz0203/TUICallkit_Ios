@@ -67,6 +67,7 @@ class IncomingBannerViewController: UIViewController {
         view.layer.cornerRadius = 10.0
         view.backgroundColor = UIColor(hex: "#22262E")
         let tap = UITapGestureRecognizer(target: self, action: #selector(showCallView(sender:)))
+        tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
     
@@ -143,18 +144,37 @@ class IncomingBannerViewController: UIViewController {
         acceptBtn.addTarget(self, action: #selector(acceptTouchEvent(sender: )), for: .touchUpInside)
     }
     
-    @objc func showCallView(sender: UIButton) {
-        view.removeFromSuperview()
-        WindowManager.shared.showCallingWindow()
+    @objc func showCallView(sender: UITapGestureRecognizer) {
+        // 检查点击位置是否在按钮上
+        let location = sender.location(in: view)
+        if acceptBtn.frame.contains(location) {
+            // 点击在接通按钮上，已经在 acceptTouchEvent 中处理
+            Logger.info("IncomingBannerViewController->showCallView: tap on accept button area")
+            return
+        } else if rejectBtn.frame.contains(location) {
+            // 点击在拒绝按钮上，已经在 rejectTouchEvent 中处理
+            Logger.info("IncomingBannerViewController->showCallView: tap on reject button area")
+            return
+        } else {
+            // 点击在其他位置
+            Logger.info("IncomingBannerViewController->showCallView: tap on other area, action: empty string")
+            NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "")
+            view.removeFromSuperview()
+//            WindowManager.shared.showCallingWindow()
+        }
     }
     
     @objc func rejectTouchEvent(sender: UIButton) {
+        Logger.info("IncomingBannerViewController->rejectTouchEvent: user clicked reject button, action: empty string")
+        NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "")
         view.removeFromSuperview()
         CallManager.shared.reject() { } fail: { code, message in }
         WindowManager.shared.closeWindow()
     }
     
     @objc func acceptTouchEvent(sender: UIButton) {
+        Logger.info("IncomingBannerViewController->acceptTouchEvent: user clicked accept button, action: accept_call_action")
+        NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "accept_call_action")
         view.removeFromSuperview()
         CallManager.shared.accept() { } fail: { code, message in }
         WindowManager.shared.showCallingWindow()

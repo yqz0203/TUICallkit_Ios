@@ -12,11 +12,16 @@ import RTCCommon
 public class CallBridge {
         
     private var floatWindowObservers: [FloatWindowObserver] = []
+    private var incomingBannerCallback: ((String) -> Void)?
     
     public init() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleTapFloatWindow),
                                                name: NSNotification.Name(EVENT_TAP_FLOATWINDOW),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleIncomingBannerAction),
+                                               name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION),
                                                object: nil)
     }
     
@@ -253,11 +258,27 @@ public class CallBridge {
         return Permission.hasPermission(callMediaType: mediaType, fail: nil)
     }
     
+    public func registerIncomingBannerCallback(callback: @escaping (String) -> Void) {
+        Logger.info("CallBridge->registerIncomingBannerCallback")
+        incomingBannerCallback = callback
+    }
+    
     // MARK: Private
     @objc private func handleTapFloatWindow() {
         Logger.info("CallBridge->handleTapFloatWindow")
         for observer in floatWindowObservers {
             observer.tapFloatWindow()
+        }
+    }
+    
+    @objc private func handleIncomingBannerAction(notification: Notification) {
+        guard let action = notification.object as? String else {
+            Logger.error("CallBridge->handleIncomingBannerAction: invalid action type")
+            return
+        }
+        Logger.info("CallBridge->handleIncomingBannerAction: action=\(action)")
+        DispatchQueue.main.async { [weak self] in
+            self?.incomingBannerCallback?(action)
         }
     }
 }
