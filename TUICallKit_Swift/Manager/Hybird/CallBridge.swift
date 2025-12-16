@@ -9,9 +9,9 @@ import RTCRoomEngine
 import TUICore
 import RTCCommon
 
-if #available(iOS 17.4, *) {
-   import TUIVoIPExtension
-}
+// if #available(iOS 17.4, *) {
+//    import TUIVoIPExtension
+// }
 
 public class CallBridge {
         
