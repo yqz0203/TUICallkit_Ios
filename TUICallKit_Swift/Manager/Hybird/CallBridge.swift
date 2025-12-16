@@ -8,6 +8,7 @@
 import RTCRoomEngine
 import TUICore
 import RTCCommon
+import TUIVoIPExtension
 
 public class CallBridge {
         
@@ -261,6 +262,17 @@ public class CallBridge {
     public func registerIncomingBannerCallback(callback: @escaping (String) -> Void) {
         Logger.info("CallBridge->registerIncomingBannerCallback")
         incomingBannerCallback = callback
+    }
+    
+    public func setCertificateID(id: Int) {
+        Logger.info("CallBridge->setCertificateID. id:\(id)")
+        DispatchQueue.main.async {
+            if #available(iOS 17.4, *) {
+                TUIVoIPExtension.setCertificateID(id)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
     }
     
     // MARK: Private
