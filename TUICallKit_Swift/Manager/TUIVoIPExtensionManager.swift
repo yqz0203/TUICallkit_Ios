@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import TUIVoIPExtension
-@available(iOS 17.4, *)
+//import TUIVoIPExtension
+//@available(iOS 17.4, *)
 @objc public class TUIVoIPExtensionManager: NSObject {
     
     @objc public static func setCertificateID(_ certificateID: Int) {
-        TUIVoIPExtension.setCertificateID(certificateID)
+//        TUIVoIPExtension.setCertificateID(certificateID)
     }
 }
