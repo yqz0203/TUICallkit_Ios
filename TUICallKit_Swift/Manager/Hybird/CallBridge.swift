@@ -9,9 +9,9 @@ import RTCRoomEngine
 import TUICore
 import RTCCommon
 
-//if #available(iOS 17.4, *) {
-//    import TUIVoIPExtension
-//}
+if #available(iOS 17.4, *) {
+   import TUIVoIPExtension
+}
 
 public class CallBridge {
         
@@ -227,24 +227,24 @@ public class CallBridge {
     
     public func setCertificate(str: String) {
         Logger.info("CallBridge->setCertificateID. id:\(str)")
-//        DispatchQueue.main.async {
-//            if #available(iOS 17.4, *) {
-//                TUIVoIPExtensionManager.setCertificateID(Int(str) ?? 0)
-//            } else {
-//                // Fallback on earlier versions
-//            }
-//        }
+       DispatchQueue.main.async {
+           if #available(iOS 17.4, *) {
+               TUIVoIPExtensionManager.setCertificateID(Int(str) ?? 0)
+           } else {
+               // Fallback on earlier versions
+           }
+       }
     }
     
     public func setCertificateID(id: Int) {
         Logger.info("CallBridge->setCertificateID. id:\(id)")
-//        DispatchQueue.main.async {
-//            if #available(iOS 17.4, *) {
-//                TUIVoIPExtensionManager.setCertificateID(id)
-//            } else {
-//                // Fallback on earlier versions
-//            }
-//        }
+       DispatchQueue.main.async {
+           if #available(iOS 17.4, *) {
+               TUIVoIPExtensionManager.setCertificateID(id)
+           } else {
+               // Fallback on earlier versions
+           }
+       }
     }
 
     
