@@ -93,7 +93,23 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
     lazy var callButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitleColor(.white, for: .normal)
-        btn.setTitle(TUICallKitAppLocalize("TUICallKitApp.Call"), for: .normal)
+        btn.setTitle("voip 播发", for: .normal)
+        btn.adjustsImageWhenHighlighted = false
+        btn.setBackgroundImage(UIColor(hex: "006EFF")?.trans2Image(), for: .normal)
+        btn.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 20)
+        btn.layer.shadowColor = UIColor(hex: "006EFF")?.cgColor ?? UIColor.blue.cgColor
+        btn.layer.shadowOffset = CGSize(width: 0, height: 6)
+        btn.layer.shadowRadius = 16
+        btn.layer.shadowOpacity = 0.4
+        btn.layer.masksToBounds = true
+        btn.layer.cornerRadius = 10
+        return btn
+    }()
+    
+    lazy var callPushButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitleColor(.white, for: .normal)
+        btn.setTitle("push 播放", for: .normal)
         btn.adjustsImageWhenHighlighted = false
         btn.setBackgroundImage(UIColor(hex: "006EFF")?.trans2Image(), for: .normal)
         btn.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 20)
@@ -143,6 +159,8 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(callSettingsLabel)
         
         view.addSubview(callButton)
+        view.addSubview(callPushButton)
+
     }
     
     func activateConstraints() {
@@ -198,6 +216,13 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
             make.height.equalTo(60)
             make.width.equalToSuperview().offset(-40)
         }
+        
+        callPushButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-160)
+            make.height.equalTo(60)
+            make.width.equalToSuperview().offset(-40)
+        }
     }
     
     func bindInteraction() {
@@ -208,6 +233,9 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
         callSettingsLabel.addGestureRecognizer(callSettingsLabelTapGesture)
         
         callButton.addTarget(self, action: #selector(callButtonClick), for: .touchUpInside)
+        
+        callPushButton.addTarget(self, action: #selector(callButtonPushClick), for: .touchUpInside)
+
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -229,6 +257,48 @@ public class SingleCallViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func callButtonClick() {
+        guard let userId = calledUserIdTextField.text else { return }
+        
+        if userId.isEmpty {
+            TUITool.makeToast("Please input userId & groupId ")
+            return
+        }
+        
+        let pushInfo: TUIOfflinePushInfo = TUIOfflinePushInfo()
+        pushInfo.title = ""
+        pushInfo.desc = "您有一个新的通话"
+        pushInfo.iOSPushType = .voIP
+        pushInfo.ignoreIOSBadge = false
+        pushInfo.iOSSound = "phone_ringing.mp3"
+        pushInfo.androidSound = "phone_ringing"
+        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
+        pushInfo.androidOPPOChannelID = "tuikit"
+        // FCM channel ID, you need change PrivateConstants.java and set "fcmPushChannelId"
+        pushInfo.androidFCMChannelID = "fcm_push_channel"
+        // VIVO message type: 0-push message, 1-System message(have a higher delivery rate)
+        pushInfo.androidVIVOClassification = 1
+        // HuaWei message type: https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/message-classification-0000001149358835
+        pushInfo.androidHuaWeiCategory = "IM"
+        
+        let params = TUICallParams()
+        params.userData = SettingsConfig.share.userData.isEmpty ? "User Data" : SettingsConfig.share.userData
+        params.timeout = Int32(SettingsConfig.share.timeout > 0 ? SettingsConfig.share.timeout : 30)
+        params.offlinePushInfo = pushInfo
+        
+        let roomId = TUIRoomId()
+        roomId.intRoomId = SettingsConfig.share.intRoomId
+        roomId.strRoomId = SettingsConfig.share.strRoomId
+        params.roomId = roomId
+        
+        TUICallKit.createInstance().calls(userIdList: [userId], callMediaType: callType, params: params) {
+            
+        } fail: { code, message in
+            TUITool.makeToast("Error \(code):\(message ?? "")")
+        }
+    }
+    
+    @objc func callButtonPushClick() {
         guard let userId = calledUserIdTextField.text else { return }
         
         if userId.isEmpty {
