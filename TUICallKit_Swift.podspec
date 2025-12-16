@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.documentation_url = 'https://cloud.tencent.com/document/product/647'
   spec.authors      = 'tencent video cloud'
   spec.summary      = 'TUICallKit'
-  spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 x86_64' }
+  spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
   
   spec.dependency 'TUICore'
   spec.dependency 'RTCCommon'
