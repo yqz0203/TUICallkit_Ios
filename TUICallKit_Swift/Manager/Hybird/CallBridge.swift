@@ -236,6 +236,18 @@ public class CallBridge {
         }
     }
     
+    public func setCertificateID(id: Int) {
+        Logger.info("CallBridge->setCertificateID. id:\(id)")
+        DispatchQueue.main.async {
+            if #available(iOS 17.4, *) {
+                TUIVoIPExtensionManager.setCertificateID(id)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+
+    
     public func startFloatWindow() {
         Logger.info("CallBridge->startFloatWindow")
         DispatchQueue.main.async {
