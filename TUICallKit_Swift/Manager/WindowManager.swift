@@ -77,6 +77,7 @@ class WindowManager: NSObject, GestureViewDelegate {
         window.rootViewController = CallKitNavigationController(rootViewController: CallMainViewController())
         window.isHidden = false
         window.backgroundColor = UIColor.black
+        window.backgroundColor = CallManager.shared.globalState.waitingBackgroundColor
         window.t_makeKeyAndVisible()
         Permission.hasPermission(callMediaType: CallManager.shared.callState.mediaType.value, fail: nil)
     }
