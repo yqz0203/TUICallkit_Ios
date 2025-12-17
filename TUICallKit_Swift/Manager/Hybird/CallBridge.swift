@@ -227,24 +227,31 @@ public class CallBridge {
     
     public func setCertificate(str: String) {
         Logger.info("CallBridge->setCertificateID. id:\(str)")
-//        DispatchQueue.main.async {
-//            if #available(iOS 17.4, *) {
-//                TUIVoIPExtensionManager.setCertificateID(Int(str) ?? 0)
-//            } else {
-//                // Fallback on earlier versions
-//            }
-//        }
+         Toast.showToast("Certificate ID setting ")
+
+        DispatchQueue.main.async {
+            if #available(iOS 17.4, *) {
+                let certificateId = Int(str) ?? 0
+                TUIVoIPExtensionManager.setCertificateID(certificateId)
+                Toast.showToast("Certificate ID set: \(certificateId)")
+            } else {
+                // Fallback on earlier versions
+                // Toast.showToast("Certificate ID setting is only available on iOS 17.4+")
+            }
+        }
     }
     
     public func setCertificateID(id: Int) {
+    Toast.showToast("Certificate ID setting ")
+
         Logger.info("CallBridge->setCertificateID. id:\(id)")
-//        DispatchQueue.main.async {
-//            if #available(iOS 17.4, *) {
-//                TUIVoIPExtensionManager.setCertificateID(id)
-//            } else {
-//                // Fallback on earlier versions
-//            }
-//        }
+        DispatchQueue.main.async {
+            if #available(iOS 17.4, *) {
+                TUIVoIPExtensionManager.setCertificateID(id)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
     }
 
     
