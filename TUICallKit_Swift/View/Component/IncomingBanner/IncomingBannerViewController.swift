@@ -166,7 +166,7 @@ class IncomingBannerViewController: UIViewController {
     
     @objc func rejectTouchEvent(sender: UIButton) {
         Logger.info("IncomingBannerViewController->rejectTouchEvent: user clicked reject button, action: empty string")
-        NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "")
+        NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "reject_call_action")
         view.removeFromSuperview()
         CallManager.shared.reject() { } fail: { code, message in }
         WindowManager.shared.closeWindow()
