@@ -177,7 +177,7 @@ class IncomingBannerViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name(EVENT_INCOMING_BANNER_ACTION), object: "accept_call_action")
         view.removeFromSuperview()
         CallManager.shared.accept() { } fail: { code, message in }
-        WindowManager.shared.showCallingWindow()
+//        WindowManager.shared.showCallingWindow()
     }
     
     // MARK: other private
