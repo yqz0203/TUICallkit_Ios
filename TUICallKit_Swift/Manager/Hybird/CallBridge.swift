@@ -9,9 +9,9 @@ import RTCRoomEngine
 import TUICore
 import RTCCommon
 
-//if #available(iOS 17.4, *) {
+// if #available(iOS 17.4, *) {
 //    import TUIVoIPExtension
-//}
+// }
 
 public class CallBridge {
         
@@ -227,6 +227,7 @@ public class CallBridge {
     
     public func setCertificate(str: String) {
         Logger.info("CallBridge->setCertificateID. id:\(str)")
+//<<<<<<< HEAD
          Toast.showToast("Certificate ID setting ")
 
         DispatchQueue.main.async {
@@ -239,12 +240,22 @@ public class CallBridge {
                 // Toast.showToast("Certificate ID setting is only available on iOS 17.4+")
             }
         }
+//=======
+//       DispatchQueue.main.async {
+//           if #available(iOS 17.4, *) {
+//               TUIVoIPExtensionManager.setCertificateID(Int(str) ?? 0)
+//           } else {
+//               // Fallback on earlier versions
+//           }
+//       }
+//>>>>>>> c5600427f2a6869f2128e0bda1980767535594ee
     }
     
     public func setCertificateID(id: Int) {
     Toast.showToast("Certificate ID setting ")
 
-        Logger.info("CallBridge->setCertificateID. id:\(id)")
+   Logger.info("CallBridge->setCertificateID. id:\(id)")
+//<<<<<<< HEAD
         DispatchQueue.main.async {
             if #available(iOS 17.4, *) {
                 TUIVoIPExtensionManager.setCertificateID(id)
@@ -252,6 +263,15 @@ public class CallBridge {
                 // Fallback on earlier versions
             }
         }
+//=======
+//       DispatchQueue.main.async {
+//           if #available(iOS 17.4, *) {
+//               TUIVoIPExtensionManager.setCertificateID(id)
+//           } else {
+//               // Fallback on earlier versions
+//           }
+//       }
+//>>>>>>> c5600427f2a6869f2128e0bda1980767535594ee
     }
 
     
