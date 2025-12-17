@@ -44,6 +44,18 @@ extension TUIVoIPExtensionManager: PKPushRegistryDelegate {
         let data = pushCredentials.token
         
         Toast.showToast("VoIP Push Token: \(token)")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // 这里写要延迟执行的代码
+            print("3秒后执行，主线程")
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: NSNotification.Name.TUILoginSuccess.rawValue), object: nil)
+
+        }
+        
+//        NotificationCenter.default.post(name: NSNotification.Name(rawValue: NSNotification.Name.TUILoginSuccess.rawValue), object: nil)
+
+//        NotificationCenter.default.addObserver(self, selector:  #selector(onLoginSuccess), name: NSNotification.Name.TUILoginSuccess, object: nil)
+
 
         // TIMPush.sharedInstance()?.updateVoIPToken(data)
     }
