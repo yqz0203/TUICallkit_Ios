@@ -67,6 +67,7 @@ class WindowManager: NSObject, GestureViewDelegate {
     
     // MARK: show calling Window
     func showCallingWindow() {
+        Logger.info("WindowManager->showCallingWindow")
         let orientationValue = UIDevice.current.orientation.rawValue
         UIDevice.current.setValue(orientationValue, forKey: "orientation")
         UIViewController.attemptRotationToDeviceOrientation()
@@ -82,6 +83,7 @@ class WindowManager: NSObject, GestureViewDelegate {
     
     // MARK: show Floating Window
     func showFloatingWindow() {
+        Logger.info("WindowManager->showFloatingWindow")
         closeWindow()
         CallManager.shared.viewState.router.value = .floatView
         let vc = FloatWindowViewController(nibName: nil, bundle: nil)
@@ -95,6 +97,7 @@ class WindowManager: NSObject, GestureViewDelegate {
         
     // MARK: show Incoming Banner Window
     func showIncomingBannerWindow() {
+        Logger.info("WindowManager->showIncomingBannerWindow")
         CallManager.shared.viewState.router.value = .banner
         window.rootViewController = IncomingBannerViewController(nibName: nil, bundle: nil)
         window.isHidden = false
@@ -105,12 +108,15 @@ class WindowManager: NSObject, GestureViewDelegate {
     
     // MARK: close windows
     func closeWindow() {
+        Logger.info("WindowManager->closeWindow")
         CallManager.shared.viewState.router.value = .none
         window.rootViewController = nil
         window.isHidden = true
     }
     
     func hideFloatingWindow() {
+        Logger.info("WindowManager->hideFloatingWindow")
+
         window.isHidden = true
         CallManager.shared.viewState.router.value = .fullView
         
