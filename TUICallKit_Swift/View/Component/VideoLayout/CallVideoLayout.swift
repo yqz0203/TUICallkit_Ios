@@ -19,6 +19,10 @@ public class CallVideoLayout: UIView {
         super.init(frame: frame)
         previousRouter = CallManager.shared.viewState.router.value
         registerObserver()
+        
+        
+        self.layer.borderWidth=2.0;
+        self.layer.borderColor = UIColor.yellow.cgColor;
     }
     
     required public init?(coder: NSCoder) {
