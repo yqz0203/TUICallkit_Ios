@@ -272,12 +272,12 @@ class TUICallKitImpl: TUICallKit {
     }
     
     @objc func showCallKitViewController() {
-        if CallManager.shared.globalState.enableIncomingBanner == true && CallManager.shared.userState.selfUser.callRole.value == .called &&
-            CallManager.shared.userState.selfUser.callStatus.value == .waiting {
-            WindowManager.shared.showIncomingBannerWindow()
-            return
-        }
-        WindowManager.shared.showCallingWindow()
+//        if CallManager.shared.globalState.enableIncomingBanner == true && CallManager.shared.userState.selfUser.callRole.value == .called &&
+//            CallManager.shared.userState.selfUser.callStatus.value == .waiting {
+//            WindowManager.shared.showIncomingBannerWindow()
+//            return
+//        }
+//        WindowManager.shared.showCallingWindow()
     }
     
     @objc func closeCallKitViewController() {
