@@ -249,7 +249,7 @@ class TUICallKitImpl: TUICallKit {
                 // 如果当前显示的是 IncomingBanner，接通后应该关闭 banner 并显示主窗口
                 if CallManager.shared.viewState.router.value == .banner {
                     WindowManager.shared.closeWindow()
-                    WindowManager.shared.showCallingWindow()
+//                    WindowManager.shared.showCallingWindow()
                 } else {
                     self.showCallKitViewController()
                 }
