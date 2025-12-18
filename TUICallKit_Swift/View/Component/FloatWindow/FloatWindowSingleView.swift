@@ -274,6 +274,7 @@ class  FloatWindowSingleView: UIView {
         if CallManager.shared.userState.selfUser.callStatus.value == .waiting {
             videoContainerView.isHidden = false
             selfVideoView.isHidden = false
+            remoteVideoView.isHidden = true
             videoDescribeLabel.isHidden = false
             selfVideoView.frame = videoContainerView.bounds
             CallManager.shared.startRemoteView(user: CallManager.shared.userState.selfUser,
@@ -281,11 +282,28 @@ class  FloatWindowSingleView: UIView {
                 
         } else if CallManager.shared.userState.selfUser.callStatus.value == .accept {
             videoContainerView.isHidden = false
+            selfVideoView.isHidden = true
             remoteVideoView.isHidden = false
+            videoDescribeLabel.isHidden = true
             remoteVideoView.frame = videoContainerView.bounds
+            
+            // 确保 remoteVideoView 在视图层级中
+            if remoteVideoView.superview == nil {
+                videoContainerView.addSubview(remoteVideoView)
+            }
+            // 确保 remoteVideoView 在最上层
+            videoContainerView.bringSubviewToFront(remoteVideoView)
+            
             if let remoteUser = CallManager.shared.userState.remoteUserList.value.first {
-                CallManager.shared.startRemoteView(user: remoteUser,
-                                                    videoView: remoteVideoView.getVideoView())
+                // 检查对方是否有视频流
+                if remoteUser.videoAvailable.value && remoteUser.callStatus.value == .accept {
+                    // 对方有视频流，显示视频
+                    CallManager.shared.startRemoteView(user: remoteUser,
+                                                        videoView: remoteVideoView.getVideoView())
+                } else {
+                    // 如果对方没有视频流，显示背景色而不是黑屏
+                    remoteVideoView.setBackgroundColor(CallManager.shared.globalState.waitingBackgroundColor)
+                }
             }
         }
     }

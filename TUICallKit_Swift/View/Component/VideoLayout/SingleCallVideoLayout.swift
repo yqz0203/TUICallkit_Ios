@@ -296,20 +296,22 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
             remoteHasVideo = remoteUser.videoAvailable.value == true && remoteUser.callStatus.value == .accept
         }
         
-        // 只有在接听、摄像头打开、有视频流时才显示视频，其他情况显示绿色背景
-        let shouldShowVideo = isAccepted && isCameraOpened && (selfHasVideo || remoteHasVideo)
+        // 判断是否应该显示视频：
+        // 1. 已接通状态
+        // 2. 自己或对方有视频流（即使自己关闭摄像头，只要对方有视频流也应该显示）
+        let shouldShowVideo = isAccepted && (selfHasVideo || remoteHasVideo)
         
         if shouldShowVideo {
             // 有视频流时，容器背景设置为clear，让视频显示
             backgroundColor = UIColor.clear
             
             // 根据视频流情况设置背景：有视频流显示视频（clear），没有视频流显示绿色背景
-            if selfHasVideo {
-                // 自己有视频流，背景设置为clear，显示视频
+            if selfHasVideo && isCameraOpened {
+                // 自己有视频流且摄像头打开，背景设置为clear，显示视频
                 selfVideoView.setBackgroundColor(UIColor.clear)
                 selfVideoView.isHidden = false
             } else {
-                // 自己没有视频流，显示配置的背景颜色
+                // 自己没有视频流或摄像头关闭，显示配置的背景颜色
                 selfVideoView.setBackgroundColor(CallManager.shared.globalState.waitingBackgroundColor)
                 selfVideoView.isHidden = false
             }
@@ -350,7 +352,7 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
                 remoteVideoView.isHidden = true
                 selfVideoView.isHidden = false
             } else {
-                // 非等待状态但也不显示视频时（如关闭摄像头），隐藏视频视图
+                // 非等待状态但也不显示视频时，隐藏视频视图
                 remoteVideoView.isHidden = true
                 selfVideoView.isHidden = true
             }
