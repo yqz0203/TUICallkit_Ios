@@ -50,7 +50,7 @@ extension TUIVoIPExtensionManager: PKPushRegistryDelegate {
         // 将 VoIP token 注册到腾讯云 IM
         let data = pushCredentials.token
         
-        Toast.showToast("VoIP Push Token: \(token)")
+//        Toast.showToast("VoIP Push Token: \(token)")
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             // 这里写要延迟执行的代码
@@ -71,7 +71,7 @@ extension TUIVoIPExtensionManager: PKPushRegistryDelegate {
     public func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         print("VoIP Push Token invalidated")
         
-        Toast.showToast("VoIP Push Token invalidated")
+//        Toast.showToast("VoIP Push Token invalidated")
 
     }
     
