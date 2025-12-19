@@ -228,7 +228,7 @@ public class CallBridge {
     public func setCertificate(str: String) {
         Logger.info("CallBridge->setCertificateID. id:\(str)")
 //<<<<<<< HEAD
-         Toast.showToast("Certificate ID setting ")
+        //  Toast.showToast("Certificate ID setting ")
 
         DispatchQueue.main.async {
             if #available(iOS 17.4, *) {
