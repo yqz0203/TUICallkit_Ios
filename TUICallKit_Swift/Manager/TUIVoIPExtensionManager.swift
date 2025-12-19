@@ -17,6 +17,7 @@ import TUIVoIPExtension
     
     private override init() {
         super.init()
+        setupPushKit()
     }
     
     @objc public func setupPushKit() {
@@ -28,7 +29,7 @@ import TUIVoIPExtension
     @objc public static func setCertificateID(_ certificateID: Int) {
         if #available(iOS 17.4, *) {
             TUIVoIPExtension.setCertificateID(certificateID)
-            TUIVoIPExtensionManager.shared.setupPushKit()
+//            TUIVoIPExtensionManager.shared.setupPushKit()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 // 这里写要延迟执行的代码
                 print("3秒后执行，主线程")
