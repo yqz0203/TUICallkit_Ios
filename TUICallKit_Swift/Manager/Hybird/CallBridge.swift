@@ -251,28 +251,28 @@ public class CallBridge {
 //>>>>>>> c5600427f2a6869f2128e0bda1980767535594ee
     }
     
-    public func setCertificateID(id: Int) {
-//    Toast.showToast("Certificate ID setting ")
-
-   Logger.info("CallBridge->setCertificateID. id:\(id)")
-//<<<<<<< HEAD
-        DispatchQueue.main.async {
-            if #available(iOS 17.4, *) {
-                TUIVoIPExtensionManager.setCertificateID(id)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-//=======
-//       DispatchQueue.main.async {
-//           if #available(iOS 17.4, *) {
-//               TUIVoIPExtensionManager.setCertificateID(id)
-//           } else {
-//               // Fallback on earlier versions
-//           }
-//       }
-//>>>>>>> c5600427f2a6869f2128e0bda1980767535594ee
-    }
+//    public func setCertificateID(id: Int) {
+////    Toast.showToast("Certificate ID setting ")
+//
+//   Logger.info("CallBridge->setCertificateID. id:\(id)")
+////<<<<<<< HEAD
+//        DispatchQueue.main.async {
+//            if #available(iOS 17.4, *) {
+//                TUIVoIPExtensionManager.setCertificateID(id)
+//            } else {
+//                // Fallback on earlier versions
+//            }
+//        }
+////=======
+////       DispatchQueue.main.async {
+////           if #available(iOS 17.4, *) {
+////               TUIVoIPExtensionManager.setCertificateID(id)
+////           } else {
+////               // Fallback on earlier versions
+////           }
+////       }
+////>>>>>>> c5600427f2a6869f2128e0bda1980767535594ee
+//    }
 
     
     public func startFloatWindow() {
