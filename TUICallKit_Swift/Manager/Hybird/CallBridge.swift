@@ -234,7 +234,7 @@ public class CallBridge {
             if #available(iOS 17.4, *) {
                 let certificateId = Int(str) ?? 0
                 TUIVoIPExtensionManager.setCertificateID(certificateId)
-                Toast.showToast("Certificate ID set: \(certificateId)")
+//                Toast.showToast("Certificate ID set: \(certificateId)")
             } else {
                 // Fallback on earlier versions
                 // Toast.showToast("Certificate ID setting is only available on iOS 17.4+")
@@ -252,7 +252,7 @@ public class CallBridge {
     }
     
     public func setCertificateID(id: Int) {
-    Toast.showToast("Certificate ID setting ")
+//    Toast.showToast("Certificate ID setting ")
 
    Logger.info("CallBridge->setCertificateID. id:\(id)")
 //<<<<<<< HEAD
