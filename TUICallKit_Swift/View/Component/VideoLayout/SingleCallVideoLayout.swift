@@ -43,6 +43,7 @@ class SingleCallVideoLayout: UIView, GestureViewDelegate {
     private let userHeadImageView: UIImageView = {
         let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
+        userHeadImageView.isHidden=true;
         userHeadImageView.layer.cornerRadius = 6.0
         if let user = CallManager.shared.userState.remoteUserList.value.first {
             userHeadImageView.sd_setImage(with: URL(string: user.avatar.value), placeholderImage: CallKitBundle.getBundleImage(name: "default_user_icon"))

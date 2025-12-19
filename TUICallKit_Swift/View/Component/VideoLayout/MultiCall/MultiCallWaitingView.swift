@@ -20,6 +20,7 @@ class MultiCallWaitingView: UIView, UICollectionViewDelegate, UICollectionViewDa
         let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
         userHeadImageView.layer.cornerRadius = 6.0
+        userHeadImageView.isHidden=true;
         if let user = CallManager.shared.userState.remoteUserList.value.first {
             userHeadImageView.sd_setImage(with: URL(string: user.avatar.value), placeholderImage: CallKitBundle.getBundleImage(name: "default_user_icon"))
         }

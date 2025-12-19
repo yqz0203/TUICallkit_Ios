@@ -38,6 +38,7 @@ class VideoView: UIView, GestureViewDelegate {
         let backgroundAvatarView = UIImageView(frame: CGRect.zero)
         backgroundAvatarView.contentMode = .scaleAspectFill
         backgroundAvatarView.clipsToBounds = true
+        backgroundAvatarView.isHidden=true;
         backgroundAvatarView.sd_setImage(with:  URL(string: user.avatar.value), placeholderImage: CallKitBundle.getBundleImage(name: "default_user_icon"))
         return backgroundAvatarView
     }()
@@ -152,6 +153,7 @@ class VideoView: UIView, GestureViewDelegate {
     
     func setBackgroundAvatarHidden(_ hidden: Bool) {
         backgroundAvatarView.isHidden = hidden
+        backgroundAvatarView.isHidden=true;
     }
         
     // MARK: UI Specification Processing
@@ -437,6 +439,8 @@ class VideoView: UIView, GestureViewDelegate {
         if CallManager.shared.viewState.callingViewType.value == .multi {
             if user.videoAvailable.value == false {
                 avatarView.isHidden = false
+                avatarView.isHidden = true
+
             }
             return
         }
@@ -444,6 +448,8 @@ class VideoView: UIView, GestureViewDelegate {
         if CallManager.shared.viewState.callingViewType.value == .one2one {
             if CallManager.shared.callState.mediaType.value == .video && user.videoAvailable.value == false && user.callStatus.value == .accept {
                 avatarView.isHidden = false
+                avatarView.isHidden = true
+
             }
             return
         }
